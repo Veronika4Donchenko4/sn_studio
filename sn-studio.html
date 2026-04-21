@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SN Studio — Mobile & Web Development Studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;
+  --bg-card:#12121a;
+  --bg-card-hover:#181825;
+  --surface:#1a1a2e;
+  --accent:#00b4ff;
+  --accent-glow:#00b4ff40;
+  --accent-dim:#00b4ff15;
+  --text:#e8e8f0;
+  --text-dim:#8888a0;
+  --text-muted:#55556a;
+  --border:#ffffff0d;
+  --radius:16px;
+  --radius-sm:10px;
+}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--accent) var(--bg)}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+::selection{background:var(--accent);color:var(--bg)}
+
+/* ─── GRAIN OVERLAY ─── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.03;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+/* ─── LAYOUT ─── */
+.container{max-width:1280px;margin:0 auto;padding:0 24px}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 0;
+  background:rgba(10,10,15,.8);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  transition:all .3s;
+}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--accent),#0066ff);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;font-weight:800;color:var(--bg);
+}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{
+  font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;
+  color:var(--text-dim);text-decoration:none;
+  transition:color .25s;position:relative;
+}
+.nav-links a:hover{color:var(--text)}
+.nav-links a::after{
+  content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
+  background:var(--accent);transition:width .3s;
+}
+.nav-links a:hover::after{width:100%}
+.nav-cta{
+  background:var(--accent)!important;color:var(--bg)!important;
+  padding:10px 24px;border-radius:50px;font-weight:600!important;
+  transition:all .25s!important;
+}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 0 20px var(--accent-glow)}
+.nav-cta::after{display:none!important}
+
+/* ─── LANGUAGE SWITCHER ─── */
+.lang-switcher{
+  display:flex;gap:4px;align-items:center;
+  padding:4px;border-radius:50px;
+  background:var(--surface);border:1px solid var(--border);
+  margin-left:8px;
+}
+.lang-btn{
+  background:transparent;border:none;cursor:pointer;
+  padding:6px 12px;border-radius:50px;
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:500;
+  color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;
+  transition:all .25s;
+}
+.lang-btn:hover{color:var(--text)}
+.lang-btn.active{background:var(--accent);color:var(--bg);font-weight:600}
+.lang-btn::after{display:none!important}
+
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.burger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:all .3s}
+
+/* ─── HERO ─── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:100px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%,var(--accent-dim),transparent),
+    radial-gradient(ellipse 40% 60% at 20% 70%,#4400ff10,transparent);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,black,transparent);
+}
+.hero .container{position:relative;z-index:1}
+.hero-content{max-width:800px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 16px;border-radius:50px;
+  background:var(--accent-dim);border:1px solid var(--accent)30;
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);
+  margin-bottom:32px;
+}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+h1{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(3rem,7vw,5.5rem);line-height:1.05;
+  letter-spacing:-.03em;margin-bottom:24px;
+}
+h1 .accent{
+  background:linear-gradient(135deg,var(--accent),#66d9ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero-desc{
+  font-size:clamp(1.05rem,2vw,1.25rem);color:var(--text-dim);
+  max-width:560px;margin-bottom:40px;line-height:1.7;
+}
+.hero-actions{display:flex;gap:16px;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;border-radius:50px;font-weight:600;font-size:.95rem;
+  text-decoration:none;transition:all .3s;cursor:pointer;border:none;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);background:var(--accent-dim)}
+
+.hero-stats{display:flex;gap:48px;margin-top:64px;padding-top:40px;border-top:1px solid var(--border)}
+.stat-num{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;color:var(--accent)}
+.stat-label{font-size:.85rem;color:var(--text-dim);margin-top:4px}
+
+/* ─── SECTIONS ─── */
+section{padding:120px 0}
+.section-label{
+  font-family:'JetBrains Mono',monospace;font-size:.75rem;
+  color:var(--accent);text-transform:uppercase;letter-spacing:.15em;
+  margin-bottom:16px;display:flex;align-items:center;gap:12px;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent)}
+.section-title{
+  font-family:'Syne',sans-serif;font-weight:800;
+  font-size:clamp(2rem,4vw,3.2rem);letter-spacing:-.02em;
+  margin-bottom:20px;line-height:1.15;
+}
+.section-desc{font-size:1.05rem;color:var(--text-dim);max-width:560px;margin-bottom:48px}
+
+/* ─── SERVICES ─── */
+.services-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+.service-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:36px 28px;transition:all .4s;position:relative;overflow:hidden;
+}
+.service-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:0;transition:opacity .4s;
+}
+.service-card:hover{border-color:#ffffff15;transform:translateY(-4px)}
+.service-card:hover::before{opacity:1}
+.service-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;font-size:1.3rem;
+}
+.service-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.2rem;margin-bottom:12px}
+.service-card p{font-size:.9rem;color:var(--text-dim);line-height:1.6}
+
+/* ─── PROJECTS ─── */
+.projects-tabs{display:flex;gap:8px;margin-bottom:36px}
+.tab-btn{
+  padding:10px 24px;border-radius:50px;border:1px solid var(--border);
+  background:transparent;color:var(--text-dim);font-family:'DM Sans',sans-serif;
+  font-size:.9rem;font-weight:500;cursor:pointer;transition:all .3s;
+}
+.tab-btn.active{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.tab-btn:not(.active):hover{border-color:var(--text-muted);color:var(--text)}
+
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+.project-card{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);
+  overflow:hidden;transition:all .4s;cursor:pointer;
+  opacity:1;transform:translateY(0);
+}
+.project-card.hidden{display:none}
+.project-card:hover{border-color:#ffffff20;transform:translateY(-6px)}
+.project-thumb{
+  aspect-ratio:16/10;position:relative;overflow:hidden;
+}
+.project-thumb-inner{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .6s cubic-bezier(.16,1,.3,1);
+  font-size:3rem;
+}
+.project-card:hover .project-thumb-inner{transform:scale(1.05)}
+.project-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 40%,rgba(10,10,15,.9));
+  opacity:0;transition:opacity .4s;
+  display:flex;align-items:flex-end;padding:20px;
+}
+.project-card:hover .project-overlay{opacity:1}
+.project-overlay span{
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);
+  padding:4px 10px;border:1px solid var(--accent)40;border-radius:4px;
+}
+.project-info{padding:20px}
+.project-info h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:6px}
+.project-info p{font-size:.8rem;color:var(--text-dim);line-height:1.5}
+.project-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.project-tags span{
+  font-size:.7rem;padding:4px 10px;border-radius:50px;
+  background:var(--surface);color:var(--text-dim);
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ─── TECH STACK ─── */
+.tech-marquee{overflow:hidden;padding:40px 0;position:relative}
+.tech-marquee::before,.tech-marquee::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;
+}
+.tech-marquee::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.tech-marquee::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.tech-track{
+  display:flex;gap:40px;animation:marquee 30s linear infinite;width:max-content;
+}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.tech-item{
+  display:flex;align-items:center;gap:10px;
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--text-dim);
+  white-space:nowrap;
+}
+.tech-dot{width:8px;height:8px;border-radius:50%;background:var(--accent)}
+
+/* ─── ABOUT ─── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.about-visual{
+  aspect-ratio:4/5;border-radius:var(--radius);
+  background:var(--bg-card);border:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.about-visual img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .6s ease;
+}
+.about-visual:hover img{transform:scale(1.03)}
+.about-visual::before{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,transparent 50%,rgba(10,10,15,.4) 100%);
+}
+.about-visual::after{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  box-shadow:inset 0 0 80px rgba(0,180,255,.08);
+  border-radius:var(--radius);
+}
+.about-visual-badge{
+  position:absolute;bottom:20px;left:20px;z-index:3;
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:50px;
+  background:rgba(10,10,15,.7);backdrop-filter:blur(10px);
+  border:1px solid rgba(0,180,255,.3);
+  font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent);
+  letter-spacing:.05em;
+}
+.about-visual-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+.about-text h2{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;margin-bottom:24px;letter-spacing:-.02em}
+.about-text p{color:var(--text-dim);margin-bottom:16px;line-height:1.8;font-size:1rem}
+.about-text p strong{color:var(--text);font-weight:600}
+.about-founders{
+  display:flex;gap:16px;margin-top:28px;padding-top:28px;
+  border-top:1px solid var(--border);
+}
+.founder{display:flex;align-items:center;gap:10px;font-size:.9rem}
+.founder-avatar{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#0066ff);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;color:var(--bg);
+}
+.founder-info strong{display:block;color:var(--text);font-size:.88rem;font-weight:600}
+.founder-info span{color:var(--text-muted);font-size:.75rem;font-family:'JetBrains Mono',monospace}
+
+/* ─── PROCESS ─── */
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.process-step{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:32px 24px;position:relative;
+  transition:all .4s;
+}
+.process-step:hover{border-color:var(--accent)40}
+.step-num{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:3rem;
+  color:var(--accent)15;position:absolute;top:16px;right:20px;
+  line-height:1;
+}
+.process-step h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:10px;margin-top:8px}
+.process-step p{font-size:.85rem;color:var(--text-dim);line-height:1.6}
+
+/* ─── CONTACT ─── */
+#contact{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-info{padding-top:8px}
+.contact-info h2{font-family:'Syne',sans-serif;font-weight:800;font-size:2.5rem;margin-bottom:16px;letter-spacing:-.02em}
+.contact-info>p{color:var(--text-dim);margin-bottom:40px;line-height:1.7;font-size:1.05rem}
+.contact-detail{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.contact-detail-icon{
+  width:44px;height:44px;border-radius:12px;background:var(--accent-dim);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;
+}
+.contact-detail-text{font-size:.9rem;color:var(--text-dim)}
+.contact-detail-text strong{color:var(--text);display:block;margin-bottom:2px}
+
+.contact-form{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:40px;
+}
+.form-group{margin-bottom:20px}
+.form-group label{
+  display:block;font-size:.8rem;font-weight:500;color:var(--text-dim);
+  margin-bottom:8px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.form-group input,.form-group textarea,.form-group select{
+  width:100%;padding:14px 16px;border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--surface);
+  color:var(--text);font-family:'DM Sans',sans-serif;font-size:.95rem;
+  transition:border-color .3s;outline:none;
+}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{
+  border-color:var(--accent);
+}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-group select{cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238888a0' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 16px center;
+}
+.form-group select option{background:var(--surface);color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn-submit{
+  width:100%;padding:16px;border-radius:50px;
+  background:var(--accent);color:var(--bg);
+  font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;
+  border:none;cursor:pointer;transition:all .3s;
+}
+.btn-submit:hover{box-shadow:0 8px 30px var(--accent-glow);transform:translateY(-2px)}
+
+/* ─── FOOTER ─── */
+footer{
+  padding:40px 0;border-top:1px solid var(--border);
+}
+footer .container{display:flex;justify-content:space-between;align-items:center}
+.footer-text{font-size:.85rem;color:var(--text-muted)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:.85rem;color:var(--text-dim);text-decoration:none;transition:color .25s}
+.footer-links a:hover{color:var(--accent)}
+
+/* ─── ANIMATIONS ─── */
+.fade-in{opacity:0;transform:translateY(30px);transition:all .7s cubic-bezier(.16,1,.3,1)}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:1024px){
+  .services-grid{grid-template-columns:repeat(2,1fr)}
+  .projects-grid{grid-template-columns:repeat(2,1fr)}
+  .process-steps{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:768px){
+  .nav-links{
+    position:fixed;top:0;right:-100%;width:70%;height:100vh;
+    background:var(--bg-card);flex-direction:column;justify-content:center;
+    padding:40px;gap:24px;transition:right .4s;z-index:200;
+    border-left:1px solid var(--border);
+  }
+  .nav-links.open{right:0}
+  .burger{display:flex;z-index:201}
+  .lang-switcher{margin-left:0;margin-top:12px}
+  .hero-stats{flex-wrap:wrap;gap:32px}
+  .services-grid,.process-steps{grid-template-columns:1fr}
+  .projects-grid{grid-template-columns:1fr}
+  .about-grid,.contact-grid{grid-template-columns:1fr}
+  .about-visual{max-height:500px;aspect-ratio:4/5}
+  .about-founders{flex-wrap:wrap}
+  .form-row{grid-template-columns:1fr}
+  h1{font-size:clamp(2.2rem,8vw,3.5rem)}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container">
+    <a href="#" class="logo">
+      <div class="logo-mark">SN</div>
+      Studio
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#services" data-i18n="nav_services">Services</a>
+      <a href="#projects" data-i18n="nav_projects">Projects</a>
+      <a href="#about" data-i18n="nav_about">About</a>
+      <a href="#process" data-i18n="nav_process">Process</a>
+      <a href="#contact" class="nav-cta" data-i18n="nav_contact">Contact</a>
+      <div class="lang-switcher">
+        <button class="lang-btn active" data-lang="en">EN</button>
+        <button class="lang-btn" data-lang="uk">UA</button>
+        <button class="lang-btn" data-lang="ru">RU</button>
+      </div>
+    </div>
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="dot"></span>
+        <span data-i18n="hero_badge">Open to new projects</span>
+      </div>
+      <h1 data-i18n="hero_title_full">We build <span class="accent">mobile apps</span> and websites that work</h1>
+      <p class="hero-desc" data-i18n="hero_desc">SN Studio — a product studio building apps and websites from idea to launch. iOS, Android, web — with a focus on design, performance, and real business results.</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary" data-i18n="hero_cta1">Our projects ↓</a>
+        <a href="#contact" class="btn btn-secondary" data-i18n="hero_cta2">Discuss your idea</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num" data-target="15">0</div>
+          <div class="stat-label" data-i18n="hero_stat1">Completed projects</div>
+        </div>
+        <div>
+          <div class="stat-num" data-target="3">0</div>
+          <div class="stat-label" data-i18n="hero_stat2">Years of experience</div>
+        </div>
+        <div>
+          <div class="stat-num" data-target="10">0</div>
+          <div class="stat-label" data-i18n="hero_stat3">Happy clients</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TECH MARQUEE -->
+<div class="tech-marquee">
+  <div class="tech-track" id="techTrack">
+    <div class="tech-item"><span class="tech-dot"></span>React Native</div>
+    <div class="tech-item"><span class="tech-dot"></span>Flutter</div>
+    <div class="tech-item"><span class="tech-dot"></span>Swift</div>
+    <div class="tech-item"><span class="tech-dot"></span>Kotlin</div>
+    <div class="tech-item"><span class="tech-dot"></span>React</div>
+    <div class="tech-item"><span class="tech-dot"></span>Next.js</div>
+    <div class="tech-item"><span class="tech-dot"></span>TypeScript</div>
+    <div class="tech-item"><span class="tech-dot"></span>Node.js</div>
+    <div class="tech-item"><span class="tech-dot"></span>Firebase</div>
+    <div class="tech-item"><span class="tech-dot"></span>Figma</div>
+    <div class="tech-item"><span class="tech-dot"></span>PostgreSQL</div>
+    <div class="tech-item"><span class="tech-dot"></span>AWS</div>
+    <!-- duplicate for seamless loop -->
+    <div class="tech-item"><span class="tech-dot"></span>React Native</div>
+    <div class="tech-item"><span class="tech-dot"></span>Flutter</div>
+    <div class="tech-item"><span class="tech-dot"></span>Swift</div>
+    <div class="tech-item"><span class="tech-dot"></span>Kotlin</div>
+    <div class="tech-item"><span class="tech-dot"></span>React</div>
+    <div class="tech-item"><span class="tech-dot"></span>Next.js</div>
+    <div class="tech-item"><span class="tech-dot"></span>TypeScript</div>
+    <div class="tech-item"><span class="tech-dot"></span>Node.js</div>
+    <div class="tech-item"><span class="tech-dot"></span>Firebase</div>
+    <div class="tech-item"><span class="tech-dot"></span>Figma</div>
+    <div class="tech-item"><span class="tech-dot"></span>PostgreSQL</div>
+    <div class="tech-item"><span class="tech-dot"></span>AWS</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="fade-in">
+  <div class="container">
+    <div class="section-label" data-i18n="services_label">Services</div>
+    <h2 class="section-title" data-i18n="services_title">What we do</h2>
+    <p class="section-desc" data-i18n="services_desc">End-to-end development — from design to deploy. We move fast and think strategically.</p>
+    <div class="services-grid">
+      <div class="service-card fade-in">
+        <div class="service-icon">📱</div>
+        <h3 data-i18n="service1_title">Mobile apps</h3>
+        <p data-i18n="service1_desc">iOS and Android — native or cross-platform. React Native, Flutter, Swift, Kotlin — we pick the stack that fits the task.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🌐</div>
+        <h3 data-i18n="service2_title">Websites & web apps</h3>
+        <p data-i18n="service2_desc">Landing pages, corporate sites, SaaS dashboards. React, Next.js, TypeScript — fast, beautiful, SEO-ready.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🎨</div>
+        <h3 data-i18n="service3_title">UI/UX Design</h3>
+        <p data-i18n="service3_desc">Interface design in Figma — wireframes, prototypes, design systems. Usable for users, on-brand for you.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">⚡</div>
+        <h3 data-i18n="service4_title">MVP development</h3>
+        <p data-i18n="service4_desc">From idea to working product in 4–8 weeks. Perfect for startups who want to hit the market quickly.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🔧</div>
+        <h3 data-i18n="service5_title">Support & evolution</h3>
+        <p data-i18n="service5_desc">Technical support, updates, refactoring. Your product keeps running smoothly — even when you're asleep.</p>
+      </div>
+      <div class="service-card fade-in">
+        <div class="service-icon">🚀</div>
+        <h3 data-i18n="service6_title">App Store publishing</h3>
+        <p data-i18n="service6_desc">We handle App Store & Google Play submissions — ASO, screenshots, descriptions, reviews.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="fade-in">
+  <div class="container">
+    <div class="section-label" data-i18n="projects_label">Portfolio</div>
+    <h2 class="section-title" data-i18n="projects_title">Our projects</h2>
+    <p class="section-desc" data-i18n="projects_desc">Selected work — mobile apps and websites across different industries.</p>
+
+    <div class="projects-tabs">
+      <button class="tab-btn active" data-filter="all" data-i18n="tab_all">All</button>
+      <button class="tab-btn" data-filter="mobile" data-i18n="tab_mobile">📱 Mobile</button>
+      <button class="tab-btn" data-filter="web" data-i18n="tab_web">🌐 Web</button>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+
+      <div class="project-card" data-type="mobile">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1a3e,#0d2847)">
+          <div class="project-thumb-inner">📱</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>FitTrack Pro</h3>
+          <p data-i18n="proj_fittrack">Fitness app with workout tracker, meal plans, and Apple Health integration.</p>
+          <div class="project-tags"><span>Flutter</span><span>Firebase</span><span>iOS</span><span>Android</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a2e1a,#0d3020)">
+          <div class="project-thumb-inner">🌐</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>EcoMarket</h3>
+          <p data-i18n="proj_ecomarket">Marketplace for organic products with subscription system and delivery.</p>
+          <div class="project-tags"><span>Next.js</span><span>Stripe</span><span>PostgreSQL</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="mobile">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#2e1a2e,#3d0d3d)">
+          <div class="project-thumb-inner">📱</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>MindSpace</h3>
+          <p data-i18n="proj_mindspace">Meditation app with a personal AI mentor and sleep analytics.</p>
+          <div class="project-tags"><span>React Native</span><span>Node.js</span><span>OpenAI</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#2e2e1a,#3d3d0d)">
+          <div class="project-thumb-inner">🌐</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>CreativeHub</h3>
+          <p data-i18n="proj_creativehub">Platform for designers — portfolios, collaboration, real-time commissions.</p>
+          <div class="project-tags"><span>React</span><span>Socket.io</span><span>AWS</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="mobile">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#0d1a2e,#0d2040)">
+          <div class="project-thumb-inner">📱</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>PayBuddy</h3>
+          <p data-i18n="proj_paybuddy">Fintech app for P2P payments, bill splitting, and personal budgeting.</p>
+          <div class="project-tags"><span>Kotlin</span><span>Swift</span><span>Plaid API</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a0d0d,#2e1414)">
+          <div class="project-thumb-inner">🌐</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>RestoPOS</h3>
+          <p data-i18n="proj_restopos">Restaurant management system — POS, table management, sales analytics.</p>
+          <div class="project-tags"><span>Next.js</span><span>TypeScript</span><span>Prisma</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="mobile">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1a0d,#2e2e14)">
+          <div class="project-thumb-inner">📱</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>PetCare</h3>
+          <p data-i18n="proj_petcare">Pet owner app — health tracker, reminders, and vet video chat.</p>
+          <div class="project-tags"><span>Flutter</span><span>Firebase</span><span>Agora</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#0d1a1a,#0d2e2e)">
+          <div class="project-thumb-inner">🌐</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>LearnFlow</h3>
+          <p data-i18n="proj_learnflow">EdTech platform with video courses, quizzes, certificates, and progress tracking.</p>
+          <div class="project-tags"><span>React</span><span>Node.js</span><span>MongoDB</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="mobile">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a0d1a,#2e0d2e)">
+          <div class="project-thumb-inner">📱</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>TravelMate</h3>
+          <p data-i18n="proj_travelmate">Travel planner with AI recommendations, offline maps, and shared trips.</p>
+          <div class="project-tags"><span>React Native</span><span>Maps API</span><span>GPT</span></div>
+        </div>
+      </div>
+
+      <div class="project-card" data-type="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1a2e,#14143d)">
+          <div class="project-thumb-inner">🌐</div>
+          <div class="project-overlay"><span data-i18n="view_project">View →</span></div>
+        </div>
+        <div class="project-info">
+          <h3>TaskForge</h3>
+          <p data-i18n="proj_taskforge">Kanban for teams with time tracking, Slack/GitHub integrations, and AI prioritization.</p>
+          <div class="project-tags"><span>Next.js</span><span>tRPC</span><span>Supabase</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="fade-in">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-visual">
+        <img src="team-photo.png" alt="Nika & Sarkham — Co-founders of SN Studio">
+        <div class="about-visual-badge">
+          <span class="dot"></span>
+          <span data-i18n="about_badge">Co-founders</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <div class="section-label" data-i18n="about_label">About us</div>
+        <h2 data-i18n="about_title">Two co-founders.<br>One senior team.</h2>
+        <p data-i18n="about_p1">We're <strong>Nika & Sarkham</strong>, co-founders of <strong>SN Studio</strong>. We don't work alone — we lead a tight-knit team of developers, designers, project managers, and QA engineers who deliver every project end-to-end.</p>
+        <p data-i18n="about_p2">Our approach is <strong>no bureaucracy</strong>. Direct communication, fast iterations, and a laser focus on what actually matters for your product — shipping it well and on time.</p>
+        <p data-i18n="about_p3">Every project is more than code. It's a product we're proud of and happy to show off.</p>
+        <div class="about-founders">
+          <div class="founder">
+            <div class="founder-avatar">N</div>
+            <div class="founder-info">
+              <strong>Nika</strong>
+              <span data-i18n="founder1_role">Co-founder</span>
+            </div>
+          </div>
+          <div class="founder">
+            <div class="founder-avatar">S</div>
+            <div class="founder-info">
+              <strong>Sarkham</strong>
+              <span data-i18n="founder2_role">Co-founder</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="fade-in">
+  <div class="container">
+    <div class="section-label" data-i18n="process_label">How we work</div>
+    <h2 class="section-title" data-i18n="process_title">From idea to launch</h2>
+    <p class="section-desc" data-i18n="process_desc">A clear process, no surprises. You always know which stage the project is at.</p>
+    <div class="process-steps">
+      <div class="process-step fade-in">
+        <div class="step-num">01</div>
+        <h3 data-i18n="step1_title">Discovery</h3>
+        <p data-i18n="step1_desc">We dig into your idea, define goals, audience, and key features. We craft the spec together.</p>
+      </div>
+      <div class="process-step fade-in">
+        <div class="step-num">02</div>
+        <h3 data-i18n="step2_title">Design</h3>
+        <p data-i18n="step2_desc">Figma prototypes, UX testing, design system. Every screen is approved before development starts.</p>
+      </div>
+      <div class="process-step fade-in">
+        <div class="step-num">03</div>
+        <h3 data-i18n="step3_title">Development</h3>
+        <p data-i18n="step3_desc">1–2 week sprints, weekly demos, CI/CD. You see progress in real time.</p>
+      </div>
+      <div class="process-step fade-in">
+        <div class="step-num">04</div>
+        <h3 data-i18n="step4_title">Launch</h3>
+        <p data-i18n="step4_desc">Testing, store submission, deployment. Post-launch — ongoing support and analytics.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="fade-in">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="section-label" data-i18n="contact_label">Contact</div>
+        <h2 data-i18n="contact_title">Let's build something great together</h2>
+        <p data-i18n="contact_desc">Got an idea? Tell us what you want to build — we'll get back to you within 24 hours.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <div class="contact-detail-text"><strong>Email</strong>hello@snstudio.dev</div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🌍</div>
+          <div class="contact-detail-text"><strong data-i18n="contact_location_label">Location</strong><span data-i18n="contact_location_value">Global, remote-first</span></div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">💬</div>
+          <div class="contact-detail-text"><strong>Telegram</strong>@snstudio</div>
+        </div>
+      </div>
+      <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name" data-i18n="form_name">Name</label>
+            <input type="text" id="name" name="name" data-i18n-placeholder="form_name_ph" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email" data-i18n="form_email">Email</label>
+            <input type="email" id="email" name="email" placeholder="email@example.com" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="project-type" data-i18n="form_project_type">Project type</label>
+          <select id="project-type" name="project_type" required>
+            <option value="" disabled selected data-i18n="form_project_type_ph">Choose type</option>
+            <option value="mobile" data-i18n="form_type_mobile">📱 Mobile app</option>
+            <option value="web" data-i18n="form_type_web">🌐 Website / Web app</option>
+            <option value="both" data-i18n="form_type_both">📱+🌐 Mobile + Web</option>
+            <option value="design" data-i18n="form_type_design">🎨 UI/UX Design</option>
+            <option value="other" data-i18n="form_type_other">🔧 Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="budget" data-i18n="form_budget">Budget</label>
+          <select id="budget" name="budget">
+            <option value="" disabled selected data-i18n="form_budget_ph">Estimated budget</option>
+            <option value="<2k" data-i18n="form_budget1">under $2,000</option>
+            <option value="2-5k">$2,000 – $5,000</option>
+            <option value="5-10k">$5,000 – $10,000</option>
+            <option value="10k+">$10,000+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message" data-i18n="form_message">Message</label>
+          <textarea id="message" name="message" data-i18n-placeholder="form_message_ph" placeholder="Tell us about your project — what you want to build, for whom, key features..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit" data-i18n="form_submit">Send request →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-text" data-i18n="footer_text">© 2026 SN Studio. Crafted with 💙 for ambitious products.</div>
+    <div class="footer-links">
+      <a href="#">GitHub</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ─── MOBILE MENU ───
+const burger = document.getElementById('burger');
+const navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  const spans = burger.querySelectorAll('span');
+  if (navLinks.classList.contains('open')) {
+    spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+  } else {
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '1';
+    spans[2].style.transform = '';
+  }
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  burger.querySelectorAll('span').forEach(s => { s.style.transform = ''; s.style.opacity = '1'; });
+}));
+
+// ─── SCROLL ANIMATIONS ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// ─── COUNTER ANIMATION ───
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const step = Math.ceil(target / 40);
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(interval); }
+        el.textContent = current + '+';
+      }, 40);
+      counterObserver.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.stat-num').forEach(el => counterObserver.observe(el));
+
+// ─── PROJECT FILTER TABS ───
+const tabs = document.querySelectorAll('.tab-btn');
+const cards = document.querySelectorAll('.project-card');
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const filter = tab.dataset.filter;
+    cards.forEach(card => {
+      if (filter === 'all' || card.dataset.type === filter) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    });
+  });
+});
+
+// ─── NAV SHRINK ON SCROLL ───
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 60) {
+    nav.style.padding = '12px 0';
+  } else {
+    nav.style.padding = '20px 0';
+  }
+});
+
+// ─── LANGUAGE SWITCHER ───
+const translations = {
+  en: {
+    // NAV
+    nav_services: 'Services', nav_projects: 'Projects', nav_about: 'About',
+    nav_process: 'Process', nav_contact: 'Contact',
+    // HERO
+    hero_badge: 'Open to new projects',
+    hero_title_accent: 'mobile apps',
+    hero_title_full: 'We build <span class="accent" data-i18n="hero_title_accent">mobile apps</span> and websites that work',
+    hero_desc: 'SN Studio — a product studio building apps and websites from idea to launch. iOS, Android, web — with a focus on design, performance, and real business results.',
+    hero_cta1: 'Our projects ↓', hero_cta2: 'Discuss your idea',
+    hero_stat1: 'Completed projects', hero_stat2: 'Years of experience', hero_stat3: 'Happy clients',
+    // SERVICES
+    services_label: 'Services', services_title: 'What we do',
+    services_desc: 'End-to-end development — from design to deploy. We move fast and think strategically.',
+    service1_title: 'Mobile apps', service1_desc: 'iOS and Android — native or cross-platform. React Native, Flutter, Swift, Kotlin — we pick the stack that fits the task.',
+    service2_title: 'Websites & web apps', service2_desc: 'Landing pages, corporate sites, SaaS dashboards. React, Next.js, TypeScript — fast, beautiful, SEO-ready.',
+    service3_title: 'UI/UX Design', service3_desc: 'Interface design in Figma — wireframes, prototypes, design systems. Usable for users, on-brand for you.',
+    service4_title: 'MVP development', service4_desc: 'From idea to working product in 4–8 weeks. Perfect for startups who want to hit the market quickly.',
+    service5_title: 'Support & evolution', service5_desc: "Technical support, updates, refactoring. Your product keeps running smoothly — even when you're asleep.",
+    service6_title: 'App Store publishing', service6_desc: 'We handle App Store & Google Play submissions — ASO, screenshots, descriptions, reviews.',
+    // PROJECTS
+    projects_label: 'Portfolio', projects_title: 'Our projects',
+    projects_desc: 'Selected work — mobile apps and websites across different industries.',
+    tab_all: 'All', tab_mobile: '📱 Mobile', tab_web: '🌐 Web', view_project: 'View →',
+    proj_fittrack: 'Fitness app with workout tracker, meal plans, and Apple Health integration.',
+    proj_ecomarket: 'Marketplace for organic products with subscription system and delivery.',
+    proj_mindspace: 'Meditation app with a personal AI mentor and sleep analytics.',
+    proj_creativehub: 'Platform for designers — portfolios, collaboration, real-time commissions.',
+    proj_paybuddy: 'Fintech app for P2P payments, bill splitting, and personal budgeting.',
+    proj_restopos: 'Restaurant management system — POS, table management, sales analytics.',
+    proj_petcare: 'Pet owner app — health tracker, reminders, and vet video chat.',
+    proj_learnflow: 'EdTech platform with video courses, quizzes, certificates, and progress tracking.',
+    proj_travelmate: 'Travel planner with AI recommendations, offline maps, and shared trips.',
+    proj_taskforge: 'Kanban for teams with time tracking, Slack/GitHub integrations, and AI prioritization.',
+    // ABOUT
+    about_label: 'About us', about_badge: 'Co-founders',
+    about_title: 'Two co-founders.<br>One senior team.',
+    about_p1: "We're <strong>Nika & Sarkham</strong>, co-founders of <strong>SN Studio</strong>. We don't work alone — we lead a tight-knit team of developers, designers, project managers, and QA engineers who deliver every project end-to-end.",
+    about_p2: 'Our approach is <strong>no bureaucracy</strong>. Direct communication, fast iterations, and a laser focus on what actually matters for your product — shipping it well and on time.',
+    about_p3: "Every project is more than code. It's a product we're proud of and happy to show off.",
+    founder1_role: 'Co-founder', founder2_role: 'Co-founder',
+    // PROCESS
+    process_label: 'How we work', process_title: 'From idea to launch',
+    process_desc: 'A clear process, no surprises. You always know which stage the project is at.',
+    step1_title: 'Discovery', step1_desc: 'We dig into your idea, define goals, audience, and key features. We craft the spec together.',
+    step2_title: 'Design', step2_desc: 'Figma prototypes, UX testing, design system. Every screen is approved before development starts.',
+    step3_title: 'Development', step3_desc: '1–2 week sprints, weekly demos, CI/CD. You see progress in real time.',
+    step4_title: 'Launch', step4_desc: 'Testing, store submission, deployment. Post-launch — ongoing support and analytics.',
+    // CONTACT
+    contact_label: 'Contact', contact_title: "Let's build something great together",
+    contact_desc: "Got an idea? Tell us what you want to build — we'll get back to you within 24 hours.",
+    contact_location_label: 'Location', contact_location_value: 'Global, remote-first',
+    form_name: 'Name', form_name_ph: 'Your name', form_email: 'Email',
+    form_project_type: 'Project type', form_project_type_ph: 'Choose type',
+    form_type_mobile: '📱 Mobile app', form_type_web: '🌐 Website / Web app',
+    form_type_both: '📱+🌐 Mobile + Web', form_type_design: '🎨 UI/UX Design', form_type_other: '🔧 Other',
+    form_budget: 'Budget', form_budget_ph: 'Estimated budget', form_budget1: 'under $2,000',
+    form_message: 'Message', form_message_ph: 'Tell us about your project — what you want to build, for whom, key features...',
+    form_submit: 'Send request →',
+    // FOOTER
+    footer_text: '© 2026 SN Studio. Crafted with 💙 for ambitious products.'
+  },
+  uk: {
+    nav_services: 'Послуги', nav_projects: 'Проекти', nav_about: 'Про нас',
+    nav_process: 'Процес', nav_contact: "Зв'язатись",
+    hero_badge: 'Відкриті до нових проектів',
+    hero_title_accent: 'мобільні додатки',
+    hero_title_full: 'Робимо <span class="accent" data-i18n="hero_title_accent">мобільні додатки</span> та вебсайти, що працюють',
+    hero_desc: 'SN Studio — продуктова студія, що створює додатки та вебсайти від ідеї до релізу. iOS, Android, веб — з фокусом на дизайн, перформанс та реальний бізнес-результат.',
+    hero_cta1: 'Наші проекти ↓', hero_cta2: 'Обговорити ідею',
+    hero_stat1: 'Завершених проектів', hero_stat2: 'Роки досвіду', hero_stat3: 'Задоволених клієнтів',
+    services_label: 'Послуги', services_title: 'Що ми робимо',
+    services_desc: 'Повний цикл розробки — від дизайну до деплою. Працюємо швидко, думаємо стратегічно.',
+    service1_title: 'Мобільні додатки', service1_desc: 'iOS та Android — нативні або кросплатформенні. React Native, Flutter, Swift, Kotlin — обираємо стек під задачу.',
+    service2_title: 'Вебсайти та веб-додатки', service2_desc: 'Landing pages, корпоративні сайти, SaaS-панелі. React, Next.js, TypeScript — швидко, красиво, з SEO.',
+    service3_title: 'UI/UX Дизайн', service3_desc: 'Проектуємо інтерфейси в Figma — wireframes, прототипи, дизайн-системи. Зручно для користувача, стильно для бренду.',
+    service4_title: 'MVP розробка', service4_desc: 'Від ідеї до робочого продукту за 4–8 тижнів. Ідеально для стартапів, які хочуть швидко вийти на ринок.',
+    service5_title: 'Підтримка та розвиток', service5_desc: 'Технічна підтримка, оновлення, рефакторинг. Ваш продукт працює стабільно, навіть коли ви спите.',
+    service6_title: 'Публікація в сторах', service6_desc: 'Допомагаємо з публікацією в App Store та Google Play — ASO, скріншоти, описи, ревью.',
+    projects_label: 'Портфоліо', projects_title: 'Наші проекти',
+    projects_desc: 'Вибрані роботи — мобільні додатки та вебсайти для різних індустрій.',
+    tab_all: 'Всі', tab_mobile: '📱 Mobile', tab_web: '🌐 Web', view_project: 'Переглянути →',
+    proj_fittrack: 'Фітнес-додаток з трекером тренувань, планами харчування та інтеграцією з Apple Health.',
+    proj_ecomarket: 'Маркетплейс органічних продуктів з системою підписок та доставки.',
+    proj_mindspace: 'Додаток для медитації з персональним AI-ментором та аналітикою сну.',
+    proj_creativehub: 'Платформа для дизайнерів — портфоліо, колаборація, замовлення в реальному часі.',
+    proj_paybuddy: 'Фінтех-додаток для P2P платежів, спліт рахунків та бюджетування.',
+    proj_restopos: 'Система управління рестораном — POS, менеджмент столів, аналітика продажів.',
+    proj_petcare: "Додаток для власників тварин — трекер здоров'я, нагадування, чат з ветеринаром.",
+    proj_learnflow: 'EdTech платформа з відео-курсами, тестами, сертифікатами та прогрес-трекером.',
+    proj_travelmate: 'Travel-планер з AI-рекомендаціями, офлайн-картами та спільними поїздками.',
+    proj_taskforge: 'Канбан для команд з тайм-трекером, інтеграціями Slack/GitHub та AI-пріоритизацією.',
+    about_label: 'Про нас', about_badge: 'Співзасновники',
+    about_title: 'Два співзасновники.<br>Одна сильна команда.',
+    about_p1: 'Ми — <strong>Ніка і Сархам</strong>, співзасновники <strong>SN Studio</strong>. Ми працюємо не самі — у нас згуртована команда розробників, дизайнерів, проджект-менеджерів та QA, яка веде кожен проект від старту до релізу.',
+    about_p2: 'Наш підхід — <strong>без бюрократії</strong>. Пряма комунікація, швидкі ітерації, фокус на тому, що дійсно важливо для вашого продукту — випустити його вчасно і якісно.',
+    about_p3: 'Кожен проект для нас — це більше ніж код. Це продукт, яким ми пишаємось і хочемо показати іншим.',
+    founder1_role: 'Співзасновниця', founder2_role: 'Співзасновник',
+    process_label: 'Як ми працюємо', process_title: 'Від ідеї до запуску',
+    process_desc: 'Чіткий процес, без сюрпризів. Ви завжди знаєте, на якому етапі проект.',
+    step1_title: 'Дискавері', step1_desc: 'Розбираємось у вашій ідеї, визначаємо цілі, аудиторію та ключові фічі. Формуємо ТЗ.',
+    step2_title: 'Дизайн', step2_desc: 'Прототипи у Figma, тестування UX, дизайн-система. Погоджуємо кожен екран до старту розробки.',
+    step3_title: 'Розробка', step3_desc: 'Спринти по 1–2 тижні, щотижневі демо, CI/CD. Ви бачите прогрес у реальному часі.',
+    step4_title: 'Запуск', step4_desc: 'Тестування, публікація в стори, деплой. Після запуску — підтримка та аналітика.',
+    contact_label: 'Контакт', contact_title: 'Давайте створимо щось круте разом',
+    contact_desc: 'Маєте ідею? Розкажіть нам, що ви хочете побудувати — ми відповімо протягом 24 годин.',
+    contact_location_label: 'Локація', contact_location_value: 'Глобально, remote-first',
+    form_name: "Ім'я", form_name_ph: "Ваше ім'я", form_email: 'Email',
+    form_project_type: 'Тип проекту', form_project_type_ph: 'Оберіть тип',
+    form_type_mobile: '📱 Мобільний додаток', form_type_web: '🌐 Вебсайт / Веб-додаток',
+    form_type_both: '📱+🌐 Мобільний + Веб', form_type_design: '🎨 UI/UX Дизайн', form_type_other: '🔧 Інше',
+    form_budget: 'Бюджет', form_budget_ph: 'Приблизний бюджет', form_budget1: 'до $2,000',
+    form_message: 'Повідомлення', form_message_ph: 'Розкажіть про ваш проект — що ви хочете побудувати, для кого, які ключові функції...',
+    form_submit: 'Надіслати запит →',
+    footer_text: '© 2026 SN Studio. Створено з 💙 для амбітних продуктів.'
+  },
+  ru: {
+    nav_services: 'Услуги', nav_projects: 'Проекты', nav_about: 'О нас',
+    nav_process: 'Процесс', nav_contact: 'Связаться',
+    hero_badge: 'Открыты к новым проектам',
+    hero_title_accent: 'мобильные приложения',
+    hero_title_full: 'Создаём <span class="accent" data-i18n="hero_title_accent">мобильные приложения</span> и вебсайты, которые работают',
+    hero_desc: 'SN Studio — продуктовая студия, создающая приложения и вебсайты от идеи до релиза. iOS, Android, веб — с фокусом на дизайн, производительность и реальный бизнес-результат.',
+    hero_cta1: 'Наши проекты ↓', hero_cta2: 'Обсудить идею',
+    hero_stat1: 'Завершённых проектов', hero_stat2: 'Года опыта', hero_stat3: 'Довольных клиентов',
+    services_label: 'Услуги', services_title: 'Что мы делаем',
+    services_desc: 'Полный цикл разработки — от дизайна до деплоя. Работаем быстро, думаем стратегически.',
+    service1_title: 'Мобильные приложения', service1_desc: 'iOS и Android — нативные или кроссплатформенные. React Native, Flutter, Swift, Kotlin — выбираем стек под задачу.',
+    service2_title: 'Вебсайты и веб-приложения', service2_desc: 'Landing pages, корпоративные сайты, SaaS-панели. React, Next.js, TypeScript — быстро, красиво, с SEO.',
+    service3_title: 'UI/UX Дизайн', service3_desc: 'Проектируем интерфейсы в Figma — wireframes, прототипы, дизайн-системы. Удобно для пользователя, стильно для бренда.',
+    service4_title: 'MVP разработка', service4_desc: 'От идеи до рабочего продукта за 4–8 недель. Идеально для стартапов, которые хотят быстро выйти на рынок.',
+    service5_title: 'Поддержка и развитие', service5_desc: 'Техническая поддержка, обновления, рефакторинг. Ваш продукт работает стабильно, даже когда вы спите.',
+    service6_title: 'Публикация в сторах', service6_desc: 'Помогаем с публикацией в App Store и Google Play — ASO, скриншоты, описания, ревью.',
+    projects_label: 'Портфолио', projects_title: 'Наши проекты',
+    projects_desc: 'Избранные работы — мобильные приложения и вебсайты для разных индустрий.',
+    tab_all: 'Все', tab_mobile: '📱 Mobile', tab_web: '🌐 Web', view_project: 'Смотреть →',
+    proj_fittrack: 'Фитнес-приложение с трекером тренировок, планами питания и интеграцией с Apple Health.',
+    proj_ecomarket: 'Маркетплейс органических продуктов с системой подписок и доставкой.',
+    proj_mindspace: 'Приложение для медитации с персональным AI-ментором и аналитикой сна.',
+    proj_creativehub: 'Платформа для дизайнеров — портфолио, коллаборация, заказы в реальном времени.',
+    proj_paybuddy: 'Финтех-приложение для P2P платежей, сплита счетов и бюджетирования.',
+    proj_restopos: 'Система управления рестораном — POS, менеджмент столов, аналитика продаж.',
+    proj_petcare: 'Приложение для владельцев животных — трекер здоровья, напоминания, чат с ветеринаром.',
+    proj_learnflow: 'EdTech платформа с видео-курсами, тестами, сертификатами и прогресс-трекером.',
+    proj_travelmate: 'Travel-планер с AI-рекомендациями, офлайн-картами и совместными поездками.',
+    proj_taskforge: 'Канбан для команд с тайм-трекером, интеграциями Slack/GitHub и AI-приоритизацией.',
+    about_label: 'О нас', about_badge: 'Со-основатели',
+    about_title: 'Два со-основателя.<br>Одна сильная команда.',
+    about_p1: 'Мы — <strong>Ника и Сархам</strong>, со-основатели <strong>SN Studio</strong>. Мы работаем не одни — у нас сплочённая команда разработчиков, дизайнеров, проджект-менеджеров и QA, которая ведёт каждый проект от старта до релиза.',
+    about_p2: 'Наш подход — <strong>без бюрократии</strong>. Прямая коммуникация, быстрые итерации, фокус на том, что действительно важно для вашего продукта — выпустить его вовремя и качественно.',
+    about_p3: 'Каждый проект для нас — это больше чем код. Это продукт, которым мы гордимся и хотим показать другим.',
+    founder1_role: 'Со-основательница', founder2_role: 'Со-основатель',
+    process_label: 'Как мы работаем', process_title: 'От идеи до запуска',
+    process_desc: 'Чёткий процесс, без сюрпризов. Вы всегда знаете, на каком этапе проект.',
+    step1_title: 'Дискавери', step1_desc: 'Разбираемся в вашей идее, определяем цели, аудиторию и ключевые фичи. Формируем ТЗ.',
+    step2_title: 'Дизайн', step2_desc: 'Прототипы в Figma, тестирование UX, дизайн-система. Согласовываем каждый экран до старта разработки.',
+    step3_title: 'Разработка', step3_desc: 'Спринты по 1–2 недели, еженедельные демо, CI/CD. Вы видите прогресс в реальном времени.',
+    step4_title: 'Запуск', step4_desc: 'Тестирование, публикация в сторах, деплой. После запуска — поддержка и аналитика.',
+    contact_label: 'Контакт', contact_title: 'Давайте создадим что-то крутое вместе',
+    contact_desc: 'Есть идея? Расскажите нам, что вы хотите построить — мы ответим в течение 24 часов.',
+    contact_location_label: 'Локация', contact_location_value: 'Глобально, remote-first',
+    form_name: 'Имя', form_name_ph: 'Ваше имя', form_email: 'Email',
+    form_project_type: 'Тип проекта', form_project_type_ph: 'Выберите тип',
+    form_type_mobile: '📱 Мобильное приложение', form_type_web: '🌐 Вебсайт / Веб-приложение',
+    form_type_both: '📱+🌐 Мобильный + Веб', form_type_design: '🎨 UI/UX Дизайн', form_type_other: '🔧 Другое',
+    form_budget: 'Бюджет', form_budget_ph: 'Примерный бюджет', form_budget1: 'до $2,000',
+    form_message: 'Сообщение', form_message_ph: 'Расскажите о вашем проекте — что хотите построить, для кого, ключевые функции...',
+    form_submit: 'Отправить запрос →',
+    footer_text: '© 2026 SN Studio. Создано с 💙 для амбициозных продуктов.'
+  }
+};
+
+function applyLang(lang) {
+  const t = translations[lang];
+  if (!t) return;
+
+  // Обробка звичайного тексту з data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) {
+      el.innerHTML = t[key];
+    }
+  });
+
+  // Особлива обробка h1 з вкладеним span.accent
+  const h1 = document.querySelector('.hero h1[data-i18n]');
+  if (h1 && t.hero_title_full) {
+    h1.innerHTML = t.hero_title_full;
+  }
+
+  // Плейсхолдери
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.setAttribute('placeholder', t[key]);
+  });
+
+  // lang атрибут HTML
+  document.documentElement.setAttribute('lang', lang);
+
+  // Зберігаємо вибір
+  try { localStorage.setItem('sn-lang', lang); } catch(e) {}
+
+  // Оновлюємо активну кнопку
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+// Відновлення збереженої мови
+try {
+  const saved = localStorage.getItem('sn-lang');
+  if (saved && translations[saved]) applyLang(saved);
+} catch(e) {}
+</script>
+</body>
+</html>
