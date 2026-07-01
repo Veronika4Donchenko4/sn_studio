@@ -77,7 +77,7 @@ const en = {
     badge: "Co-founders",
     titleLine1: "Two co-founders.",
     titleLine2: "One senior team.",
-    p1: "We're Nika & Sarkham, co-founders of Niksar. We don't work alone — we lead a tight-knit team of developers, designers, project managers, and QA engineers who deliver every project end-to-end.",
+    p1: "We're Nika & Sarkhan, co-founders of Niksar. We don't work alone — we lead a tight-knit team of developers, designers, project managers, and QA engineers who deliver every project end-to-end.",
     p2: "Our approach is no bureaucracy. Direct communication, fast iterations, and a laser focus on what actually matters for your product — shipping it well and on time.",
     p3: "Every project is more than code. It's a product we're proud of and happy to show off.",
     founder1Role: "Co-founder",

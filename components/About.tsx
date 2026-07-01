@@ -26,7 +26,7 @@ export default function About() {
           <div className="mt-8 flex gap-8 border-t border-white/10 pt-8">
             {[
               { initial: "N", name: "Nika", role: t.about.founder1Role },
-              { initial: "S", name: "Sarkham", role: t.about.founder2Role },
+              { initial: "S", name: "Sarkhan", role: t.about.founder2Role },
             ].map((f) => (
               <div key={f.name} className="flex items-center gap-3">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 font-serif text-sm text-white">
@@ -45,7 +45,7 @@ export default function About() {
           <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
             <Image
               src="/team-photo.png"
-              alt="Nika & Sarkham — co-founders of Niksar"
+              alt="Nika & Sarkhan — co-founders of Niksar"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover"
