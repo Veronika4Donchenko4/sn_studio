@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-zinc-400 antialiased;
+    font-feature-settings: "ss01";
+  }
+
+  ::selection {
+    @apply bg-white text-black;
+  }
+
+  /* Thin, low-contrast scrollbar to match the minimal aesthetic. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-6 sm:px-8;
+  }
+
+  /* Large serif display heading — the core of the resend.com look. */
+  .display {
+    @apply font-serif font-normal tracking-tight text-white;
+    text-wrap: balance;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-zinc-500;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-zinc-700;
+  }
+
+  .hairline {
+    @apply border-white/10;
+  }
+
+  .glow {
+    background: radial-gradient(
+        ellipse 50% 45% at 50% 0%,
+        rgba(120, 119, 198, 0.18),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 40% 35% at 80% 10%,
+        rgba(255, 255, 255, 0.06),
+        transparent 70%
+      );
+  }
+}
+
+@layer utilities {
+  /* Reveal-on-scroll base state; .is-visible is toggled by the FadeIn wrapper. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+    .animate-marquee {
+      animation: none;
+    }
+  }
+}
