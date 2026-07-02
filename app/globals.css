@@ -2,9 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Animatable angle for the running-diode card border. Registering it as a
+ * custom @property lets us animate the conic-gradient rotation smoothly on a
+ * rectangular element (transform:rotate would peel the ring off the edges).
+ * Browsers without @property support fall back to a static border.
+ */
+@property --nk-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes nk-spin {
+  to {
+    --nk-angle: 360deg;
+  }
+}
+
 @layer base {
   :root {
     color-scheme: dark;
+
+    /* Brand: violet-indigo. Tweak the diode + glow from here. */
+    --nk-ring: #6366f1; /* base ring color */
+    --nk-comet-1: #a78bfa; /* bright comet peak (in) */
+    --nk-comet-2: #ede9fe; /* bright comet peak (crest) */
+    --nk-glow: #7c3aed; /* soft glow color */
+    --nk-frame: #0d0d0f; /* card wrapper background (visible as faint hairline) */
+    --nk-surface: #000000; /* inner card surface */
   }
 
   html {
@@ -70,6 +96,58 @@
         transparent 70%
       );
   }
+
+  /*
+   * Running-diode card: a rotating conic-gradient hairline that reads as a
+   * quiet premium detail. Wrap a card in `.nk-card` and give the content
+   * element `.nk-card-inner`.
+   */
+  .nk-card {
+    position: relative;
+    border-radius: 16px;
+    padding: 1.5px;
+    background: var(--nk-frame);
+  }
+
+  /* The rotating ring, masked to show only the 1.5px border band. */
+  .nk-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--nk-angle),
+      transparent 0 72%,
+      var(--nk-ring) 82%,
+      var(--nk-comet-1) 89%,
+      var(--nk-comet-2) 92%,
+      var(--nk-comet-1) 95%,
+      transparent 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: nk-spin 7s linear infinite;
+    pointer-events: none;
+  }
+
+  .nk-card-inner {
+    position: relative;
+    height: 100%;
+    border-radius: 14.5px; /* 16px frame − 1.5px padding */
+    overflow: hidden;
+    /* Soft glow blob in the top-right corner, layered behind content. */
+    background:
+      radial-gradient(
+        160px 160px at 88% 8%,
+        color-mix(in srgb, var(--nk-ring) 16%, transparent),
+        transparent 70%
+      ),
+      var(--nk-surface);
+  }
 }
 
 @layer utilities {
@@ -96,6 +174,10 @@
       scroll-behavior: auto;
     }
     .animate-marquee {
+      animation: none;
+    }
+    /* Leave a static, faint diode border instead of spinning it. */
+    .nk-card::before {
       animation: none;
     }
   }

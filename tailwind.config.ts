@@ -12,6 +12,14 @@ const config: Config = {
         ink: "#000000",
         surface: "#0a0a0a",
         "surface-2": "#101010",
+        // Brand: violet-indigo. Mirrors the --nk-* CSS vars in globals.css.
+        brand: {
+          DEFAULT: "#6366f1",
+          ring: "#6366f1",
+          comet: "#a78bfa",
+          "comet-bright": "#ede9fe",
+          glow: "#7c3aed",
+        },
       },
       fontFamily: {
         serif: ["var(--font-instrument)", "Newsreader", "Georgia", "serif"],

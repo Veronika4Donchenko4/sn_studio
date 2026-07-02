@@ -81,9 +81,10 @@ export default function Contact() {
         </FadeIn>
 
         <FadeIn>
+          <div className="nk-card">
           <form
             onSubmit={handleSubmit}
-            className="relative rounded-2xl border border-white/10 bg-black p-6 sm:p-8"
+            className="nk-card-inner relative p-6 sm:p-8"
             noValidate
           >
             {/* Honeypot: hidden from users, must stay empty. */}
@@ -199,6 +200,7 @@ export default function Contact() {
                   : "placeholder"}
             </p>
           </form>
+          </div>
         </FadeIn>
       </div>
     </section>

@@ -42,21 +42,23 @@ export default function About() {
         </FadeIn>
 
         <FadeIn className="order-1 lg:order-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
-            <Image
-              src="/team-photo.png"
-              alt="Nika & Sarkhan — co-founders of Niksar"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-            <div
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
-              aria-hidden
-            />
-            <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur">
-              <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-emerald-400" />
-              {t.about.badge}
+          <div className="nk-card">
+            <div className="nk-card-inner relative aspect-[4/5]">
+              <Image
+                src="/team-photo.png"
+                alt="Nika & Sarkhan — co-founders of Niksar"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
+              <div
+                className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
+                aria-hidden
+              />
+              <div className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs text-zinc-300 backdrop-blur">
+                <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-emerald-400" />
+                {t.about.badge}
+              </div>
             </div>
           </div>
         </FadeIn>

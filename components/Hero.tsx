@@ -3,6 +3,7 @@
 import { useT } from "@/lib/i18n";
 import { STATS } from "@/lib/content";
 import Counter from "./ui/Counter";
+import ScalesCanvas from "./ScalesCanvas";
 
 export default function Hero() {
   const t = useT();
@@ -15,6 +16,8 @@ export default function Hero() {
         className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"
         aria-hidden
       />
+
+      <ScalesCanvas />
 
       <div className="container-content relative">
         <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 px-3 py-1.5 text-xs text-zinc-400">
