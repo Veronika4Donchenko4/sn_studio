@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Animatable angle for the running-diode card border. Registering it as a
+ * custom @property lets us animate the conic-gradient rotation smoothly on a
+ * rectangular element (transform:rotate would peel the ring off the edges).
+ * Browsers without @property support fall back to a static border.
+ */
+@property --nk-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes nk-spin {
+  to {
+    --nk-angle: 360deg;
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Brand: violet-indigo. Tweak the diode + glow from here. */
+    --nk-ring: #6366f1; /* base ring color */
+    --nk-comet-1: #a78bfa; /* bright comet peak (in) */
+    --nk-comet-2: #ede9fe; /* bright comet peak (crest) */
+    --nk-glow: #7c3aed; /* soft glow color */
+    --nk-frame: #0d0d0f; /* card wrapper background (visible as faint hairline) */
+    --nk-surface: #000000; /* inner card surface */
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-zinc-400 antialiased;
+    font-feature-settings: "ss01";
+  }
+
+  ::selection {
+    @apply bg-white text-black;
+  }
+
+  /* Thin, low-contrast scrollbar to match the minimal aesthetic. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  .container-content {
+    @apply mx-auto w-full max-w-content px-6 sm:px-8;
+  }
+
+  /* Large serif display heading — the core of the resend.com look. */
+  .display {
+    @apply font-serif font-normal tracking-tight text-white;
+    text-wrap: balance;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-3 text-xs uppercase tracking-[0.2em] text-zinc-500;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply h-px w-6 bg-zinc-700;
+  }
+
+  .hairline {
+    @apply border-white/10;
+  }
+
+  .glow {
+    background: radial-gradient(
+        ellipse 50% 45% at 50% 0%,
+        rgba(120, 119, 198, 0.18),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 40% 35% at 80% 10%,
+        rgba(255, 255, 255, 0.06),
+        transparent 70%
+      );
+  }
+
+  /*
+   * Running-diode card: a rotating conic-gradient hairline that reads as a
+   * quiet premium detail. Wrap a card in `.nk-card` and give the content
+   * element `.nk-card-inner`.
+   */
+  .nk-card {
+    position: relative;
+    border-radius: 16px;
+    padding: 1.5px;
+    background: var(--nk-frame);
+  }
+
+  /* The rotating ring, masked to show only the 1.5px border band. */
+  .nk-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: conic-gradient(
+      from var(--nk-angle),
+      transparent 0 72%,
+      var(--nk-ring) 82%,
+      var(--nk-comet-1) 89%,
+      var(--nk-comet-2) 92%,
+      var(--nk-comet-1) 95%,
+      transparent 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: nk-spin 7s linear infinite;
+    pointer-events: none;
+  }
+
+  .nk-card-inner {
+    position: relative;
+    height: 100%;
+    border-radius: 14.5px; /* 16px frame − 1.5px padding */
+    overflow: hidden;
+    /* Soft glow blob in the top-right corner, layered behind content. */
+    background:
+      radial-gradient(
+        160px 160px at 88% 8%,
+        color-mix(in srgb, var(--nk-ring) 16%, transparent),
+        transparent 70%
+      ),
+      var(--nk-surface);
+  }
+}
+
+@layer utilities {
+  /* Reveal-on-scroll base state; .is-visible is toggled by the FadeIn wrapper. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+    .animate-marquee {
+      animation: none;
+    }
+    /* Leave a static, faint diode border instead of spinning it. */
+    .nk-card::before {
+      animation: none;
+    }
+  }
+}
