@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useI18n, LOCALES, LOCALE_LABELS } from "@/lib/i18n";
 
 const SECTIONS = ["services", "projects", "about", "process"] as const;
@@ -42,9 +43,14 @@ export default function Nav() {
     >
       <nav className="container-content flex items-center justify-between">
         <a href="#" className="flex items-center gap-2.5 text-white">
-          <span className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-white/5 font-serif text-sm">
-            N
-          </span>
+          <Image
+            src="/icon-192.png"
+            alt="Niksar"
+            width={30}
+            height={30}
+            className="rounded-md"
+            priority
+          />
           <span className="font-serif text-xl tracking-tight">NIKSAR</span>
         </a>
 

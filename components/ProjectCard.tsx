@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useT } from "@/lib/i18n";
 import type { Project } from "@/lib/content";
 import ProjectMockup from "./ProjectMockup";
@@ -9,7 +10,10 @@ export default function ProjectCard({ project }: { project: Project }) {
   const desc = t.projects.items[project.id];
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-white/10 bg-black transition-colors hover:border-white/25">
+    <Link
+      href={`/projects/${project.id}`}
+      className="group block overflow-hidden rounded-2xl border border-white/10 bg-black transition-colors hover:border-white/25"
+    >
       <div className="relative aspect-[16/10] overflow-hidden">
         <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]">
           <ProjectMockup project={project} />
@@ -32,6 +36,6 @@ export default function ProjectCard({ project }: { project: Project }) {
           ))}
         </ul>
       </div>
-    </article>
+    </Link>
   );
 }

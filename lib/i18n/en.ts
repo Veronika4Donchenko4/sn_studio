@@ -138,6 +138,42 @@ const en = {
   footer: {
     text: "© 2026 NIKSAR. Crafted for ambitious products.",
   },
+  caseStudy: {
+    eyebrow: "Case study",
+    back: "Back to projects",
+    factsTitle: "Quick facts",
+    timeline: "Timeline",
+    timelineValue: "6–8 weeks",
+    techStack: "Tech stack",
+    projectType: "Project type",
+    whatWeDid: "What we did",
+    whatWeDidValue: "Strategy, UI/UX design, development, launch",
+    challengeTitle: "The challenge",
+    challengeBody:
+      "The client came to us with an early idea and a tight timeline. They needed a polished, reliable product that would stand out in a crowded market — without cutting corners on design or engineering. Our job was to turn a rough concept into a shippable product with a clear architecture and a delightful user experience.",
+    solutionsTitle: "Key solutions",
+    solutionsIntro:
+      "We worked in short, focused sprints — shaping the product step by step and validating each decision with the client before moving on.",
+    solution1Title: "Discovery & product shape",
+    solution1Body:
+      "We started by mapping the core user journeys and defining the feature set that mattered most. A clear scope and a shared spec let us move fast without surprises.",
+    solution2Title: "Design system & interface",
+    solution2Body:
+      "We designed a consistent, on-brand interface in Figma — from wireframes to a reusable component library — so every screen felt like part of one product.",
+    solution3Title: "Build & launch",
+    solution3Body:
+      "We implemented the product with a clean, maintainable codebase, wired up the integrations, and shipped through a smooth release process with room to grow.",
+    resultTitle: "Result",
+    resultBody:
+      "The product launched on schedule and gave the client a solid foundation to build on. The result is a fast, polished experience that users enjoy and the team can extend with confidence.",
+    result1: "A polished product ready for real users",
+    result2: "A scalable codebase and design system",
+    result3: "A clear path for future features",
+    ctaTitle: "Discuss your project",
+    ctaBody:
+      "Have an idea you want to bring to life? Tell us about it — we'll help you shape, design, and ship it.",
+    ctaButton: "Discuss your project",
+  },
 };
 
 export default en;

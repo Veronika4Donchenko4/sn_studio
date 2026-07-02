@@ -123,16 +123,28 @@ export default function ScalesCanvas() {
     };
   }, []);
 
+  const maskGradient =
+    "linear-gradient(to right, transparent 0%, transparent 45%, rgba(0,0,0,0.5) 70%, #000 100%)";
+
   return (
     <div
       className="pointer-events-none absolute inset-y-0 right-0 hidden w-[52%] md:block"
       aria-hidden
       style={{
-        maskImage: "linear-gradient(to right, transparent, #000 30%)",
-        WebkitMaskImage: "linear-gradient(to right, transparent, #000 30%)",
+        maskImage: maskGradient,
+        WebkitMaskImage: maskGradient,
       }}
     >
       <canvas ref={canvasRef} className="h-full w-full" />
+      {/* Extra dark overlay to deepen the fade toward the text (left). */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        aria-hidden
+        style={{
+          background:
+            "linear-gradient(to right, #000 0%, rgba(0,0,0,0.6) 35%, transparent 70%)",
+        }}
+      />
     </div>
   );
 }
