@@ -35,41 +35,53 @@ export type Project = {
   accent: [string, string];
   /** English-only label shown inside the rendered UI mockup. */
   screenTitle: string;
+  /** Optional external links — rendered as buttons on the case-study page. */
+  website?: string;
+  appStore?: string;
+  googlePlay?: string;
 };
 
 // All mockups render an English-only UI regardless of the active site language.
 export const PROJECTS: Project[] = [
   {
-    id: "fittrack",
-    name: "FitTrack Pro",
+    id: "isoul",
+    name: "ISOUL",
     type: "mobile",
-    tags: ["Flutter", "Firebase", "iOS", "Android"],
-    accent: ["#3b82f6", "#1e3a8a"],
-    screenTitle: "Today's Workout",
+    tags: ["Flutter", "Firebase", "iOS", "Android", "Web admin"],
+    accent: ["#e0629b", "#7c3aed"],
+    screenTitle: "Match of the Day",
+    appStore:
+      "https://apps.apple.com/us/app/isoul-women-networking/id6742156958",
+    googlePlay:
+      "https://play.google.com/store/apps/details?id=com.mycompany.isoul",
   },
   {
-    id: "ecomarket",
-    name: "EcoMarket",
+    id: "balloons-calgary",
+    name: "Balloons Calgary",
     type: "web",
-    tags: ["Next.js", "Stripe", "PostgreSQL"],
-    accent: ["#22c55e", "#14532d"],
-    screenTitle: "Organic Marketplace",
+    tags: ["Next.js", "Supabase", "Resend"],
+    accent: ["#f472b6", "#a855f7"],
+    screenTitle: "Shop by Occasion",
+    website: "https://www.balloonscalgary.ca/",
   },
   {
-    id: "mindspace",
-    name: "MindSpace",
+    id: "boom-chat",
+    name: "Boom Chat",
     type: "mobile",
-    tags: ["React Native", "Node.js", "OpenAI"],
-    accent: ["#a855f7", "#581c87"],
-    screenTitle: "Daily Meditation",
+    tags: ["React Native", "Supabase", "Subscriptions"],
+    accent: ["#8b5cf6", "#4338ca"],
+    screenTitle: "Chats & Tasks",
+    appStore: "https://apps.apple.com/us/app/boom-chat/id6758313530",
   },
   {
-    id: "creativehub",
-    name: "CreativeHub",
-    type: "web",
-    tags: ["React", "Socket.io", "AWS"],
-    accent: ["#eab308", "#713f12"],
-    screenTitle: "Designer Portfolios",
+    id: "airsoft-arena",
+    name: "Airsoft Arena",
+    type: "mobile",
+    tags: ["Flutter", "Firebase", "Web admin"],
+    accent: ["#65a30d", "#3f6212"],
+    screenTitle: "Games Near You",
+    googlePlay:
+      "https://play.google.com/store/apps/details?id=com.romanovdev.airsoftarena",
   },
   {
     id: "paybuddy",
