@@ -8,19 +8,67 @@ import Footer from "./Footer";
 import FadeIn from "./ui/FadeIn";
 import ProjectMockup from "./ProjectMockup";
 
+// Bespoke per-project case content. Entries share most fields but each project
+// only fills in what applies to it, so every field is optional here.
+type CaseData = {
+  subtitle?: string;
+  timelineValue?: string;
+  techStackValue?: string;
+  projectTypeValue?: string;
+  whatWeDidValue?: string;
+  platformsValue?: string;
+  languagesValue?: string;
+  categoryValue?: string;
+  challengeBody?: string;
+  solution1Title?: string;
+  solution1Body?: string;
+  solution2Title?: string;
+  solution2Body?: string;
+  solution3Title?: string;
+  solution3Body?: string;
+  results?: string[];
+};
+
 export default function CaseStudy({ project }: { project: Project }) {
   const t = useT();
   const c = t.caseStudy;
-  const subtitle = t.projects.items[project.id];
+
+  // Projects with an entry in `cases` show real, bespoke content; the rest
+  // fall back to the generic template copy.
+  const cd = (c.cases as unknown as Partial<Record<Project["id"], CaseData>>)[
+    project.id
+  ];
+
   const typeLabel =
     project.type === "mobile" ? t.projects.tabMobile : t.projects.tabWeb;
 
-  const solutions = [
-    { title: c.solution1Title, body: c.solution1Body },
-    { title: c.solution2Title, body: c.solution2Body },
-    { title: c.solution3Title, body: c.solution3Body },
-  ];
-  const results = [c.result1, c.result2, c.result3];
+  const subtitle = cd?.subtitle ?? t.projects.items[project.id];
+  const challengeBody = cd?.challengeBody ?? c.challengeBody;
+  const projectTypeValue = cd?.projectTypeValue ?? typeLabel;
+  const whatWeDidValue = cd?.whatWeDidValue ?? c.whatWeDidValue;
+  const timelineValue = cd?.timelineValue ?? c.timelineValue;
+
+  const solutions = cd
+    ? [
+        {
+          title: cd.solution1Title ?? c.solution1Title,
+          body: cd.solution1Body ?? c.solution1Body,
+        },
+        {
+          title: cd.solution2Title ?? c.solution2Title,
+          body: cd.solution2Body ?? c.solution2Body,
+        },
+        {
+          title: cd.solution3Title ?? c.solution3Title,
+          body: cd.solution3Body ?? c.solution3Body,
+        },
+      ]
+    : [
+        { title: c.solution1Title, body: c.solution1Body },
+        { title: c.solution2Title, body: c.solution2Body },
+        { title: c.solution3Title, body: c.solution3Body },
+      ];
+  const results = cd?.results ?? [c.result1, c.result2, c.result3];
 
   return (
     <>
@@ -61,6 +109,49 @@ export default function CaseStudy({ project }: { project: Project }) {
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-zinc-400">
               {subtitle}
             </p>
+
+            {(project.website || project.appStore || project.googlePlay) && (
+              <div className="mt-8 flex flex-wrap gap-3">
+                {project.website && (
+                  <a
+                    href={project.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
+                  >
+                    {c.liveSite} ↗
+                  </a>
+                )}
+                {project.appStore && (
+                  <a
+                    href={project.appStore}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      project.website
+                        ? "rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
+                        : "rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
+                    }
+                  >
+                    {c.appStore} ↗
+                  </a>
+                )}
+                {project.googlePlay && (
+                  <a
+                    href={project.googlePlay}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      project.website || project.appStore
+                        ? "rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
+                        : "rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
+                    }
+                  >
+                    {c.googlePlay} ↗
+                  </a>
+                )}
+              </div>
+            )}
           </FadeIn>
 
           {/* Cover mockup */}
@@ -80,7 +171,7 @@ export default function CaseStudy({ project }: { project: Project }) {
             <FadeIn as="div">
               <h2 className="display text-3xl sm:text-4xl">{c.challengeTitle}</h2>
               <p className="mt-5 leading-relaxed text-zinc-400">
-                {c.challengeBody}
+                {challengeBody}
               </p>
             </FadeIn>
 
@@ -144,24 +235,39 @@ export default function CaseStudy({ project }: { project: Project }) {
               <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6">
                 <p className="eyebrow">{c.factsTitle}</p>
                 <dl className="mt-6 space-y-5">
-                  <Fact label={c.timeline} value={c.timelineValue} />
+                  <Fact label={c.timeline} value={timelineValue} />
                   <div>
                     <dt className="text-xs uppercase tracking-wide text-zinc-500">
                       {c.techStack}
                     </dt>
-                    <dd className="mt-2 flex flex-wrap gap-2">
-                      {project.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-300"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </dd>
+                    {cd?.techStackValue ? (
+                      <dd className="mt-1 text-sm text-zinc-300">
+                        {cd.techStackValue}
+                      </dd>
+                    ) : (
+                      <dd className="mt-2 flex flex-wrap gap-2">
+                        {project.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-300"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </dd>
+                    )}
                   </div>
-                  <Fact label={c.projectType} value={typeLabel} />
-                  <Fact label={c.whatWeDid} value={c.whatWeDidValue} />
+                  <Fact label={c.projectType} value={projectTypeValue} />
+                  <Fact label={c.whatWeDid} value={whatWeDidValue} />
+                  {cd?.platformsValue && (
+                    <Fact label={c.platforms} value={cd.platformsValue} />
+                  )}
+                  {cd?.languagesValue && (
+                    <Fact label={c.languages} value={cd.languagesValue} />
+                  )}
+                  {cd?.categoryValue && (
+                    <Fact label={c.category} value={cd.categoryValue} />
+                  )}
                 </dl>
               </div>
             </div>
