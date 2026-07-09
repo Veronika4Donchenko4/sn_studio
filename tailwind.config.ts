@@ -45,10 +45,16 @@ const config: Config = {
           "0%,100%": { opacity: "1" },
           "50%": { opacity: "0.4" },
         },
+        // Soft glow shimmer for the floating Telegram button.
+        shimmer: {
+          "0%,100%": { opacity: "0.4", transform: "scale(0.92)" },
+          "50%": { opacity: "0.75", transform: "scale(1.12)" },
+        },
       },
       animation: {
         marquee: "marquee 40s linear infinite",
         "pulse-slow": "pulse 2.4s ease-in-out infinite",
+        shimmer: "shimmer 3.6s ease-in-out infinite",
       },
     },
   },

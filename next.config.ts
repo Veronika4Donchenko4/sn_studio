@@ -12,11 +12,13 @@ const isDev = process.env.NODE_ENV !== "production";
  */
 const csp = [
   `default-src 'self'`,
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  // Vercel Analytics / Speed Insights loader is served from va.vercel-scripts.com;
+  // its beacons post to the same-origin /_vercel/* endpoints.
+  `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com${isDev ? " 'unsafe-eval'" : ""}`,
   `style-src 'self' 'unsafe-inline'`,
   `img-src 'self' data: blob:`,
   `font-src 'self'`,
-  `connect-src 'self'`,
+  `connect-src 'self' https://va.vercel-scripts.com`,
   `form-action 'self'`,
   `frame-ancestors 'none'`,
   `frame-src 'none'`,

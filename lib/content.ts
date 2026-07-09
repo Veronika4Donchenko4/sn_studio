@@ -1,4 +1,4 @@
-import type { Dict } from "./i18n/en";
+import en, { type Dict } from "./i18n/en";
 
 /**
  * Structural, language-agnostic site data. Translatable strings live in the
@@ -9,6 +9,16 @@ export type ServiceId = keyof Dict["services"]["items"];
 export type ProjectId = keyof Dict["projects"]["items"];
 export type StepId = keyof Dict["process"]["steps"];
 export type ProjectType = "mobile" | "web";
+
+/**
+ * A project has a published case study when it has a bespoke entry in the
+ * dictionary `caseStudy.cases` map. This is the single source of truth: cards
+ * for these projects are clickable and their `/projects/[slug]` page is built;
+ * placeholder projects (still using made-up data) are neither.
+ */
+export function hasCaseStudy(id: ProjectId): boolean {
+  return Object.prototype.hasOwnProperty.call(en.caseStudy.cases, id);
+}
 
 export const SERVICE_IDS: ServiceId[] = [
   "mobile",
@@ -211,4 +221,7 @@ export const STATS: { target: number; key: "stat1" | "stat2" | "stat3" }[] = [
 export const CONTACT_DETAILS = {
   email: "hello@niksar.dev",
   telegram: "@niksar",
+  // WhatsApp is offered via the scannable QR image only (public/whatsup.jpg).
+  // The raw number is intentionally not stored here so it never ships in the
+  // page source or client bundle.
 };

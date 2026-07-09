@@ -63,6 +63,7 @@ const en = {
     tabMobile: "Mobile",
     tabWeb: "Web",
     view: "View",
+    comingSoon: "Coming soon",
     items: {
       isoul: "A global women-only networking app and community platform, from idea to launch on the App Store and Google Play.",
       "balloons-calgary": "A full e-commerce website for a Calgary balloon-arrangement business: catalog, cart, and date-based delivery ordering.",
@@ -180,6 +181,26 @@ const en = {
   },
   footer: {
     text: "© 2026 NIKSAR. Crafted for ambitious products.",
+    whatsappScan: "Scan to chat on WhatsApp",
+    privacy: "Privacy",
+  },
+  privacy: {
+    back: "Back to home",
+    title: "Privacy Policy",
+    intro:
+      "We keep this simple. Here's exactly what we collect and why. No dark patterns, no data games.",
+    analyticsTitle: "Analytics",
+    analyticsBody:
+      "We use privacy-friendly, cookieless analytics (Vercel Analytics and Speed Insights) to see which pages people visit and how the site performs. It doesn't use cookies, doesn't track you across other websites, and doesn't build a profile of you. That's why you don't see a cookie banner: there's nothing to consent to.",
+    contactTitle: "Contact form",
+    contactBody:
+      "When you send us a message, we receive the details you type in (like your name, email and what you want to build). We use that only to reply to you and talk about your project. We don't sell it, and we don't share it with anyone who isn't helping us answer you.",
+    cookiesTitle: "No tracking cookies",
+    cookiesBody:
+      "We don't use Google Analytics, advertising trackers, or any third-party tracking cookies. No cross-site tracking, full stop.",
+    questionsTitle: "Questions?",
+    questionsBody:
+      "If you want anything clarified or want your message data removed, just email us and we'll sort it out.",
   },
   caseStudy: {
     eyebrow: "Case study",
