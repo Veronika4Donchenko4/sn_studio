@@ -3,13 +3,64 @@
 import { useState, type FormEvent } from "react";
 import { useT } from "@/lib/i18n";
 import { CONTACT_DETAILS } from "@/lib/content";
+import type {
+  ContactFieldErrors,
+  ContactFormField,
+  ContactValidationCode,
+  ContactValidationResponse,
+} from "@/lib/contact-validation";
 import FadeIn from "./ui/FadeIn";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+function FieldErrors({
+  field,
+  codes,
+  messages,
+}: {
+  field: ContactFormField;
+  codes: ContactValidationCode[] | undefined;
+  messages: Partial<Record<ContactValidationCode, string>>;
+}) {
+  if (!codes?.length) return null;
+
+  return (
+    <>
+      {codes.map((code, i) => {
+        const msg = messages[code];
+        if (!msg) return null;
+        return (
+          <p
+            key={code}
+            id={i === 0 ? `${field}-error` : undefined}
+            role="alert"
+            className="mt-1.5 text-xs text-red-400"
+          >
+            {msg}
+          </p>
+        );
+      })}
+    </>
+  );
+}
+
 export default function Contact() {
   const t = useT();
   const [status, setStatus] = useState<Status>("idle");
+  const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
+
+  function clearFieldError(field: ContactFormField) {
+    setFieldErrors((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
+  }
+
+  function fieldHasError(field: ContactFormField) {
+    return Boolean(fieldErrors[field]?.length);
+  }
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,6 +77,7 @@ export default function Contact() {
       company: String(fd.get("company") ?? ""), // honeypot
     };
 
+    setFieldErrors({});
     setStatus("sending");
     try {
       const res = await fetch("/api/contact", {
@@ -33,7 +85,23 @@ export default function Contact() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Request failed");
+
+      const body = (await res.json().catch(() => null)) as
+        | ContactValidationResponse
+        | { error?: string }
+        | null;
+
+      if (res.status === 400 && body && "fieldErrors" in body) {
+        setFieldErrors(body.fieldErrors);
+        setStatus("idle");
+        return;
+      }
+
+      if (!res.ok) {
+        setStatus("error");
+        return;
+      }
+
       setStatus("success");
       form.reset();
     } catch {
@@ -43,8 +111,16 @@ export default function Contact() {
 
   const fieldClass =
     "w-full rounded-lg border border-white/10 bg-surface px-4 py-3 text-sm text-white outline-none transition-colors placeholder:text-zinc-600 focus:border-white/30";
+  const fieldErrorClass =
+    "border-red-400/50 focus:border-red-400/70";
   const labelClass =
     "mb-2 block text-xs uppercase tracking-wide text-zinc-500";
+
+  function inputClass(field: ContactFormField) {
+    return `${fieldClass}${fieldHasError(field) ? ` ${fieldErrorClass}` : ""}`;
+  }
+
+  const validation = t.contact.validation;
 
   return (
     <section id="contact" className="container-content py-28 sm:py-36">
@@ -111,7 +187,15 @@ export default function Contact() {
                   required
                   maxLength={100}
                   placeholder={t.contact.formNamePh}
-                  className={fieldClass}
+                  aria-invalid={fieldHasError("name")}
+                  aria-describedby={fieldHasError("name") ? "name-error" : undefined}
+                  onChange={() => clearFieldError("name")}
+                  className={inputClass("name")}
+                />
+                <FieldErrors
+                  field="name"
+                  codes={fieldErrors.name}
+                  messages={validation.name}
                 />
               </div>
               <div>
@@ -125,7 +209,15 @@ export default function Contact() {
                   required
                   maxLength={200}
                   placeholder={t.contact.formEmailPh}
-                  className={fieldClass}
+                  aria-invalid={fieldHasError("email")}
+                  aria-describedby={fieldHasError("email") ? "email-error" : undefined}
+                  onChange={() => clearFieldError("email")}
+                  className={inputClass("email")}
+                />
+                <FieldErrors
+                  field="email"
+                  codes={fieldErrors.email}
+                  messages={validation.email}
                 />
               </div>
             </div>
@@ -134,7 +226,18 @@ export default function Contact() {
               <label htmlFor="projectType" className={labelClass}>
                 {t.contact.formProjectType}
               </label>
-              <select id="projectType" name="projectType" required defaultValue="" className={fieldClass}>
+              <select
+                id="projectType"
+                name="projectType"
+                required
+                defaultValue=""
+                aria-invalid={fieldHasError("projectType")}
+                aria-describedby={
+                  fieldHasError("projectType") ? "projectType-error" : undefined
+                }
+                onChange={() => clearFieldError("projectType")}
+                className={inputClass("projectType")}
+              >
                 <option value="" disabled>
                   {t.contact.formProjectTypePh}
                 </option>
@@ -144,19 +247,37 @@ export default function Contact() {
                 <option value="design">{t.contact.typeDesign}</option>
                 <option value="other">{t.contact.typeOther}</option>
               </select>
+              <FieldErrors
+                field="projectType"
+                codes={fieldErrors.projectType}
+                messages={validation.projectType}
+              />
             </div>
 
             <div className="mt-5">
               <label htmlFor="budget" className={labelClass}>
                 {t.contact.formBudget}
               </label>
-              <select id="budget" name="budget" defaultValue="" className={fieldClass}>
+              <select
+                id="budget"
+                name="budget"
+                defaultValue=""
+                aria-invalid={fieldHasError("budget")}
+                aria-describedby={fieldHasError("budget") ? "budget-error" : undefined}
+                onChange={() => clearFieldError("budget")}
+                className={inputClass("budget")}
+              >
                 <option value="">{t.contact.formBudgetPh}</option>
                 <option value="<2k">{t.contact.budget1}</option>
                 <option value="2-5k">$2,000 – $5,000</option>
                 <option value="5-10k">$5,000 – $10,000</option>
                 <option value="10k+">$10,000+</option>
               </select>
+              <FieldErrors
+                field="budget"
+                codes={fieldErrors.budget}
+                messages={validation.budget}
+              />
             </div>
 
             <div className="mt-5">
@@ -171,7 +292,15 @@ export default function Contact() {
                 maxLength={5000}
                 rows={5}
                 placeholder={t.contact.formMessagePh}
-                className={`${fieldClass} resize-y`}
+                aria-invalid={fieldHasError("message")}
+                aria-describedby={fieldHasError("message") ? "message-error" : undefined}
+                onChange={() => clearFieldError("message")}
+                className={`${inputClass("message")} resize-y`}
+              />
+              <FieldErrors
+                field="message"
+                codes={fieldErrors.message}
+                messages={validation.message}
               />
             </div>
 

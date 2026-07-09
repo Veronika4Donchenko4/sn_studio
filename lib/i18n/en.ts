@@ -155,6 +155,28 @@ const en = {
     sending: "Sending…",
     success: "Thanks! We'll be in touch within 24 hours.",
     error: "Something went wrong. Please try again or email us directly.",
+    validation: {
+      name: {
+        required: "Please enter your name.",
+        too_long: "Name must be 100 characters or fewer.",
+      },
+      email: {
+        required: "Please enter your email.",
+        invalid_email: "Please enter a valid email address.",
+        too_long: "Email must be 200 characters or fewer.",
+      },
+      projectType: {
+        invalid_option: "Please select a project type.",
+      },
+      budget: {
+        invalid_option: "Please select a valid budget range.",
+      },
+      message: {
+        required: "Please enter a message.",
+        too_short: "Message must be at least 10 characters.",
+        too_long: "Message must be 5,000 characters or fewer.",
+      },
+    },
   },
   footer: {
     text: "© 2026 NIKSAR. Crafted for ambitious products.",

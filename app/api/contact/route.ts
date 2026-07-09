@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { contactSchema } from "@/lib/contact-schema";
+import { mapContactZodIssues } from "@/lib/contact-validation";
 import { rateLimit, pruneExpired } from "@/lib/rate-limit";
 
 // This route must run on the Node.js runtime (Resend SDK) and never be cached.
@@ -61,7 +62,10 @@ export async function POST(req: Request) {
   const parsed = contactSchema.safeParse(json);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Validation failed.", issues: parsed.error.flatten().fieldErrors },
+      {
+        error: "validation_failed",
+        fieldErrors: mapContactZodIssues(parsed.error.issues),
+      },
       { status: 400 },
     );
   }
