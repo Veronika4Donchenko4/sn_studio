@@ -19,6 +19,7 @@ const csp = [
   `connect-src 'self'`,
   `form-action 'self'`,
   `frame-ancestors 'none'`,
+  `frame-src 'none'`,
   `base-uri 'self'`,
   `object-src 'none'`,
   `upgrade-insecure-requests`,
@@ -33,12 +34,17 @@ const securityHeaders = [
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
+    value:
+      "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()",
   },
   {
     key: "Strict-Transport-Security",
     value: "max-age=63072000; includeSubDomains; preload",
   },
+  // Isolate our browsing context from cross-origin openers.
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+  // Block legacy Adobe cross-domain policy files.
+  { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
   { key: "X-DNS-Prefetch-Control", value: "on" },
 ];
 

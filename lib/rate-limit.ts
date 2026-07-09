@@ -3,7 +3,7 @@
  *
  * Suitable for a single-instance deployment / basic abuse protection. For a
  * horizontally-scaled deployment, swap this for a shared store (e.g. Upstash
- * Redis) — the call site only depends on the `rateLimit()` signature.
+ * Redis); the call site only depends on the `rateLimit()` signature.
  */
 
 type Bucket = { count: number; resetAt: number };

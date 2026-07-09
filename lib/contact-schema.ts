@@ -14,8 +14,11 @@ export const contactSchema = z.object({
     .optional()
     .transform((v) => (v === "" ? undefined : v)),
   message: z.string().trim().min(10, "Message is too short").max(5000),
-  // Honeypot — must stay empty. Bots tend to fill every field.
-  company: z.string().max(0).optional(),
+  // Honeypot: hidden field that must stay empty for humans. We intentionally
+  // accept any string here (capped) rather than rejecting a filled value, so
+  // the route can silently "succeed" on bots instead of returning a 400 that
+  // signals the trap. Enforcement lives in the API route.
+  company: z.string().max(200).optional(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

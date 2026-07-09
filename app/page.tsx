@@ -3,6 +3,7 @@ import Hero from "@/components/Hero";
 import TechStrip from "@/components/TechStrip";
 import Services from "@/components/Services";
 import Projects from "@/components/Projects";
+import Rescue from "@/components/Rescue";
 import About from "@/components/About";
 import Process from "@/components/Process";
 import Contact from "@/components/Contact";
@@ -17,6 +18,7 @@ export default function Home() {
         <TechStrip />
         <Services />
         <Projects />
+        <Rescue />
         <About />
         <Process />
         <Contact />

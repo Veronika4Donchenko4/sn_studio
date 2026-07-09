@@ -42,13 +42,13 @@ export default function About() {
         </FadeIn>
 
         <FadeIn className="order-1 lg:order-2">
-          <div className="nk-card">
+          <div className="nk-card mx-auto w-full max-w-xs lg:ml-auto lg:mr-0">
             <div className="nk-card-inner relative aspect-[4/5]">
               <Image
                 src="/team-photo.png"
-                alt="Nika & Sarkhan — co-founders of Niksar"
+                alt="Nika & Sarkhan, co-founders of Niksar"
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                sizes="320px"
                 className="object-cover"
               />
               <div
