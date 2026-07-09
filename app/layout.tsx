@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Newsreader, Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { LanguageProvider } from "@/lib/i18n";
+import TelegramFab from "@/components/TelegramFab";
 import "./globals.css";
 
 const instrument = Instrument_Serif({
@@ -46,6 +49,10 @@ export default function RootLayout({
     <html lang="en" className={`${instrument.variable} ${newsreader.variable} ${inter.variable}`}>
       <body className="font-sans">
         <LanguageProvider>{children}</LanguageProvider>
+        <TelegramFab />
+        {/* Cookieless, GDPR-friendly analytics (no cookie banner needed). */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

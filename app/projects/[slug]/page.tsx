@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PROJECTS } from "@/lib/content";
+import { PROJECTS, hasCaseStudy } from "@/lib/content";
 import CaseStudy from "@/components/CaseStudy";
 
+// Only projects with a published case study get a page; placeholder projects
+// are excluded so their filler pages are never reachable.
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.id }));
+  return PROJECTS.filter((p) => hasCaseStudy(p.id)).map((p) => ({
+    slug: p.id,
+  }));
 }
 
 export async function generateMetadata({
@@ -14,7 +18,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.id === slug);
-  if (!project) return {};
+  if (!project || !hasCaseStudy(project.id)) return {};
   return {
     title: `${project.name}: Niksar Case Study`,
     description: `How Niksar designed and built ${project.name}.`,
@@ -28,7 +32,7 @@ export default async function ProjectCasePage({
 }) {
   const { slug } = await params;
   const project = PROJECTS.find((p) => p.id === slug);
-  if (!project) notFound();
+  if (!project || !hasCaseStudy(project.id)) notFound();
 
   return <CaseStudy project={project} />;
 }
