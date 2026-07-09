@@ -19,7 +19,10 @@ type CaseData = {
   platformsValue?: string;
   languagesValue?: string;
   categoryValue?: string;
+  monetizationValue?: string;
+  statusValue?: string;
   challengeBody?: string;
+  adminNote?: string;
   solution1Title?: string;
   solution1Body?: string;
   solution2Title?: string;
@@ -48,21 +51,17 @@ export default function CaseStudy({ project }: { project: Project }) {
   const whatWeDidValue = cd?.whatWeDidValue ?? c.whatWeDidValue;
   const timelineValue = cd?.timelineValue ?? c.timelineValue;
 
+  // Cases list the solutions they actually define (some have fewer than three);
+  // projects without a case entry fall back to the generic three.
   const solutions = cd
     ? [
-        {
-          title: cd.solution1Title ?? c.solution1Title,
-          body: cd.solution1Body ?? c.solution1Body,
-        },
-        {
-          title: cd.solution2Title ?? c.solution2Title,
-          body: cd.solution2Body ?? c.solution2Body,
-        },
-        {
-          title: cd.solution3Title ?? c.solution3Title,
-          body: cd.solution3Body ?? c.solution3Body,
-        },
-      ]
+        { title: cd.solution1Title, body: cd.solution1Body },
+        { title: cd.solution2Title, body: cd.solution2Body },
+        { title: cd.solution3Title, body: cd.solution3Body },
+      ].filter(
+        (s): s is { title: string; body: string } =>
+          Boolean(s.title) && Boolean(s.body),
+      )
     : [
         { title: c.solution1Title, body: c.solution1Body },
         { title: c.solution2Title, body: c.solution2Body },
@@ -100,9 +99,16 @@ export default function CaseStudy({ project }: { project: Project }) {
         {/* Hero */}
         <section className="container-content relative">
           <FadeIn>
-            <p className="eyebrow">
-              {c.eyebrow} · {typeLabel}
-            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="eyebrow">
+                {c.eyebrow} · {typeLabel}
+              </p>
+              {project.concept && (
+                <span className="inline-flex items-center rounded-full border border-violet-400/30 bg-violet-400/10 px-2.5 py-1 text-[10px] uppercase tracking-[0.15em] text-violet-200">
+                  {c.concept}
+                </span>
+              )}
+            </div>
             <h1 className="display mt-5 text-5xl leading-[1.05] sm:text-6xl md:text-7xl">
               {project.name}
             </h1>
@@ -110,7 +116,10 @@ export default function CaseStudy({ project }: { project: Project }) {
               {subtitle}
             </p>
 
-            {(project.website || project.appStore || project.googlePlay) && (
+            {(project.website ||
+              project.appStore ||
+              project.googlePlay ||
+              project.telegram) && (
               <div className="mt-8 flex flex-wrap gap-3">
                 {project.website && (
                   <a
@@ -119,7 +128,7 @@ export default function CaseStudy({ project }: { project: Project }) {
                     rel="noopener noreferrer"
                     className="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-opacity hover:opacity-90"
                   >
-                    {c.liveSite} ↗
+                    {project.concept ? c.livePreview : c.liveSite} ↗
                   </a>
                 )}
                 {project.appStore && (
@@ -148,6 +157,16 @@ export default function CaseStudy({ project }: { project: Project }) {
                     }
                   >
                     {c.googlePlay} ↗
+                  </a>
+                )}
+                {project.telegram && (
+                  <a
+                    href={project.telegram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-white/15 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-white/5"
+                  >
+                    {c.telegram} ↗
                   </a>
                 )}
               </div>
@@ -209,6 +228,28 @@ export default function CaseStudy({ project }: { project: Project }) {
               </div>
             </FadeIn>
 
+            {/* Admin panel: labeled image placeholder (real screenshots later) */}
+            {cd?.adminNote && (
+              <FadeIn as="div" className="mt-16">
+                <h2 className="display text-3xl sm:text-4xl">{c.adminPanel}</h2>
+                <p className="mt-5 leading-relaxed text-zinc-400">
+                  {cd.adminNote}
+                </p>
+                <div className="nk-card mt-6">
+                  <div className="nk-card-inner relative flex aspect-[16/10] items-center justify-center overflow-hidden border border-dashed border-white/15">
+                    <div className="text-center">
+                      <span className="rounded-full border border-white/15 bg-black/50 px-3 py-1 text-[11px] uppercase tracking-wide text-zinc-300">
+                        {c.adminPanel}
+                      </span>
+                      <p className="mt-3 text-xs text-zinc-500">
+                        {c.screenshotSoon}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </FadeIn>
+            )}
+
             {/* Result */}
             <FadeIn as="div" className="mt-16">
               <h2 className="display text-3xl sm:text-4xl">{c.resultTitle}</h2>
@@ -267,6 +308,12 @@ export default function CaseStudy({ project }: { project: Project }) {
                   )}
                   {cd?.categoryValue && (
                     <Fact label={c.category} value={cd.categoryValue} />
+                  )}
+                  {cd?.monetizationValue && (
+                    <Fact label={c.monetization} value={cd.monetizationValue} />
+                  )}
+                  {cd?.statusValue && (
+                    <Fact label={c.status} value={cd.statusValue} />
                   )}
                 </dl>
               </div>

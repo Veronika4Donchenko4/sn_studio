@@ -24,12 +24,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Niksar — Mobile & Web Development Studio",
+  title: "Niksar: Mobile & Web Development Studio",
   description:
-    "Niksar — a product studio building mobile apps and websites from idea to launch. iOS, Android, web — design, performance, and real business results.",
+    "Niksar is a product studio building mobile apps and websites from idea to launch. iOS, Android, web: design, performance, and real business results.",
   metadataBase: new URL("https://niksar.dev"),
   openGraph: {
-    title: "Niksar — Mobile & Web Development Studio",
+    title: "Niksar: Mobile & Web Development Studio",
     description:
       "A product studio building apps and websites from idea to launch.",
     type: "website",

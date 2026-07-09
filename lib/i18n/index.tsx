@@ -48,7 +48,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (isLocale(saved)) setLocaleState(saved);
     } catch {
-      /* localStorage unavailable — fall back to default */
+      /* localStorage unavailable, fall back to default */
     }
   }, []);
 

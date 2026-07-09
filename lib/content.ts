@@ -13,6 +13,7 @@ export type ProjectType = "mobile" | "web";
 export const SERVICE_IDS: ServiceId[] = [
   "mobile",
   "web",
+  "telegram",
   "design",
   "mvp",
   "support",
@@ -35,10 +36,13 @@ export type Project = {
   accent: [string, string];
   /** English-only label shown inside the rendered UI mockup. */
   screenTitle: string;
-  /** Optional external links — rendered as buttons on the case-study page. */
+  /** Optional external links, rendered as buttons on the case-study page. */
   website?: string;
   appStore?: string;
   googlePlay?: string;
+  telegram?: string;
+  /** Marks a design concept (shows a "Concept" badge) rather than a shipped product. */
+  concept?: boolean;
 };
 
 // All mockups render an English-only UI regardless of the active site language.
@@ -82,6 +86,56 @@ export const PROJECTS: Project[] = [
     screenTitle: "Games Near You",
     googlePlay:
       "https://play.google.com/store/apps/details?id=com.romanovdev.airsoftarena",
+  },
+  {
+    id: "onymi",
+    name: "Onymi",
+    type: "mobile",
+    tags: ["Flutter", "Supabase", "AI", "Web admin"],
+    accent: ["#f97316", "#c026d3"],
+    screenTitle: "Pick an Emotion",
+    appStore: "https://apps.apple.com/us/app/onymi/id6758524773",
+    googlePlay:
+      "https://play.google.com/store/apps/details?id=com.mycompany.onymi",
+    telegram: "https://t.me/OnymiBot",
+  },
+  {
+    id: "bronicat",
+    name: "Bronicat",
+    type: "mobile",
+    tags: ["React Native", "FlutterFlow", "Supabase"],
+    accent: ["#0ea5e9", "#4f46e5"],
+    screenTitle: "Book a Table",
+    appStore: "https://apps.apple.com/us/app/id6762212866",
+  },
+  {
+    id: "smmarket",
+    name: "SMMarket Insurance",
+    type: "mobile",
+    tags: ["Flutter", "React", "Supabase"],
+    accent: ["#10b981", "#0369a1"],
+    screenTitle: "Compare & Get Covered",
+    appStore: "https://apps.apple.com/us/app/smmarket-insurance/id6779952432",
+    googlePlay:
+      "https://play.google.com/store/apps/details?id=com.developer.strahovoymarket",
+  },
+  {
+    id: "studywork",
+    name: "StudyWork",
+    type: "web",
+    tags: ["React", "Supabase"],
+    accent: ["#6366f1", "#0891b2"],
+    screenTitle: "Courses & Lessons",
+  },
+  {
+    id: "cyber-garage",
+    name: "Cyber Garage",
+    type: "web",
+    tags: ["Next.js"],
+    accent: ["#a855f7", "#db2777"],
+    screenTitle: "Custom Garage Builds",
+    website: "https://cyber-garage-omega.vercel.app/",
+    concept: true,
   },
   {
     id: "paybuddy",

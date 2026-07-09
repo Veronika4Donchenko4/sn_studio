@@ -26,9 +26,16 @@ function escapeHtml(value: string): string {
 }
 
 function getClientIp(req: Request): string {
+  // Prefer `x-real-ip`, which the hosting platform (e.g. Vercel) sets to the
+  // real connecting IP. The leftmost `x-forwarded-for` entry is
+  // client-controllable — a request can inject a spoofed value that the proxy
+  // then appends the real IP after — so it must not be trusted as the primary
+  // source for a rate-limit key.
+  const realIp = req.headers.get("x-real-ip");
+  if (realIp) return realIp.trim();
   const forwarded = req.headers.get("x-forwarded-for");
   if (forwarded) return forwarded.split(",")[0]!.trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
+  return "unknown";
 }
 
 export async function POST(req: Request) {
@@ -61,7 +68,7 @@ export async function POST(req: Request) {
 
   const data = parsed.data;
 
-  // 3. Honeypot tripped — pretend success so bots get no signal.
+  // 3. Honeypot tripped: pretend success so bots get no signal.
   if (data.company) {
     return NextResponse.json({ ok: true }, { status: 200 });
   }
@@ -86,7 +93,7 @@ export async function POST(req: Request) {
   const budget = data.budget ?? "Not specified";
 
   const html = `
-    <h2>New project inquiry — Niksar</h2>
+    <h2>New project inquiry: Niksar</h2>
     <p><strong>Name:</strong> ${escapeHtml(data.name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
     <p><strong>Project type:</strong> ${escapeHtml(projectTypeLabel)}</p>
@@ -96,7 +103,7 @@ export async function POST(req: Request) {
   `.trim();
 
   const text = [
-    "New project inquiry — Niksar",
+    "New project inquiry: Niksar",
     `Name: ${data.name}`,
     `Email: ${data.email}`,
     `Project type: ${projectTypeLabel}`,

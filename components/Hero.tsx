@@ -26,9 +26,8 @@ export default function Hero() {
         </div>
 
         <h1 className="display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl">
-          {t.hero.titleLead}{" "}
-          <em className="font-serif not-italic text-zinc-500">{t.hero.titleAccent}</em>{" "}
-          {t.hero.titleTrail}
+          {t.hero.titleLead} {t.hero.titleAccent}{" "}
+          <em className="font-serif not-italic text-zinc-500">{t.hero.titleTrail}</em>
         </h1>
 
         <p className="mt-7 max-w-xl text-lg leading-relaxed text-zinc-400">
